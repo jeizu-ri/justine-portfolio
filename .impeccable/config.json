@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "all-caps-body",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-01T00:13:27.902Z",
+        "reason": "user confirmed: the brief pins all UI text to uppercase 13px mono"
+      }
+    ]
+  }
+}

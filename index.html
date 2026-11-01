@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Justine Rivera — Developer portfolio</title>
+<meta name="description" content="Justine Rivera is an IT student in the Philippines who builds web apps and follows ideas through to deployment. A logbook of shipped projects: PWAs, finance tools, games and team builds.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23000'/%3E%3Ccircle cx='20' cy='20' r='18.5' fill='none' stroke='%23fff' stroke-width='1.6'/%3E%3Cpolygon fill='%23fff' points='20,11 21.34,16.77 26.36,13.64 23.23,18.66 29,20 23.23,21.34 26.36,26.36 21.34,23.23 20,29 18.66,23.23 13.64,26.36 16.77,21.34 11,20 16.77,18.66 13.64,13.64 18.66,16.77'/%3E%3C/svg%3E">
+<style>
+:root {
+  --accent: #aa88ff;
+  --text: #dddddd;
+  --muted: #8a8a8a;
+  --chip: #1c1c1c;
+  --line: #2a2a2a;
+  --mono: "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; background: #000; }
+body {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--accent); color: #000; }
+a { color: inherit; }
+a:focus-visible, button:focus-visible { outline: 1px solid var(--accent); outline-offset: 3px; }
+
+#bg { position: fixed; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; background: #000; }
+
+.ui { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+
+/* Brand */
+.brand { position: absolute; top: 24px; left: 24px; display: flex; flex-direction: row; gap: 14px; align-items: center; mix-blend-mode: plus-lighter; }
+.brand svg { display: block; width: 40px; height: 40px; flex: none; }
+.brand-name { font-size: 20px; color: #fff; line-height: 1.1; }
+.brand-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* Counter */
+.counter {
+  position: absolute; top: 24px; right: 24px;
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid var(--line); background: #0a0a0a;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: #fff; font-variant-numeric: tabular-nums;
+}
+
+/* Tags */
+.tags { position: absolute; top: 120px; left: 24px; width: 320px; display: flex; flex-wrap: wrap; gap: 6px; mix-blend-mode: plus-lighter; }
+.chip {
+  pointer-events: auto; cursor: pointer;
+  font: inherit; font-size: 11px; letter-spacing: inherit; text-transform: inherit;
+  background: var(--chip); color: #cfcfcf; border: 0; border-radius: 0;
+  padding: 5px 9px;
+  transition: background-color 200ms, color 200ms;
+}
+.chip:hover { background: #2a2a2a; }
+.chip[aria-pressed="true"] { background: #e6e6e6; color: #000; }
+
+/* Card list */
+.list {
+  position: absolute; top: 250px; left: 24px; bottom: 0; width: 320px;
+  overflow-y: auto; pointer-events: auto;
+  scrollbar-width: none; -ms-overflow-style: none;
+  padding-bottom: 24px;
+}
+.list::-webkit-scrollbar { display: none; }
+.card { display: block; padding: 18px 0; border-top: 1px solid var(--line); text-decoration: none; color: inherit; }
+.card[hidden] { display: none; }
+.thumb { position: relative; height: 160px; border-radius: 2px; background: #0a0a0a; overflow: hidden; }
+.thumb img, .thumb video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 600ms cubic-bezier(.16, 1, .3, 1); }
+.card:hover .thumb img, .card:hover .thumb video { transform: scale(1.04); }
+.thumb .none {
+  position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 12px;
+  font-size: 11px; color: #a0a0a0;
+  background-image: radial-gradient(circle, #2a2a2a 1px, transparent 1.5px);
+  background-size: 12px 12px;
+}
+.meta { display: flex; justify-content: space-between; gap: 16px; margin-top: 10px; font-size: 12px; white-space: pre-line; }
+.meta span:first-child { color: #fff; }
+.meta span:last-child { color: var(--muted); text-align: right; }
+
+/* Text column */
+.about {
+  position: absolute; right: 90px; top: 50%; transform: translateY(-50%); width: 380px;
+  max-height: calc(100% - 140px); overflow-y: auto; scrollbar-width: none;
+  pointer-events: auto; mix-blend-mode: plus-lighter;
+}
+.about::-webkit-scrollbar { display: none; }
+.about section + section { margin-top: 2.2em; }
+.about h2 { font-size: 13px; font-weight: 400; color: var(--accent); margin-bottom: 1em; }
+.about p { text-align: justify; margin-bottom: 1em; }
+.about p:last-child { margin-bottom: 0; }
+.about ul { list-style: inside; }
+.about a { display: block; margin: 4px 0; text-decoration: underline; text-underline-offset: 3px; transition: opacity 300ms; }
+.about a:hover { opacity: .7; }
+.m-projects { display: none; }
+
+@media (max-width: 1100px) {
+  .about { right: 24px; width: 320px; }
+}
+@media (max-width: 760px) {
+  .list, .tags { display: none; }
+  .about { left: 24px; right: 24px; bottom: 24px; top: auto; width: auto; transform: none; max-height: calc(100% - 120px); }
+  .about p { text-align: left; }
+  .about .info { display: none; }
+  .m-projects { display: block; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .thumb img, .thumb video { transition: none; }
+  .card:hover .thumb img, .card:hover .thumb video { transform: none; }
+}
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+
+<div class="ui">
+  <header class="brand">
+    <svg viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="18.5" fill="none" stroke="#fff" stroke-width="1.6"/>
+      <polygon fill="#fff" points="20,11 21.34,16.77 26.36,13.64 23.23,18.66 29,20 23.23,21.34 26.36,26.36 21.34,23.23 20,29 18.66,23.23 13.64,26.36 16.77,21.34 11,20 16.77,18.66 13.64,13.64 18.66,16.77"/>
+    </svg>
+    <div>
+      <div class="brand-name">Justine Rivera</div>
+      <div class="brand-sub">Developer portfolio</div>
+    </div>
+  </header>
+
+  <div class="counter" id="counter" role="status" aria-label="Projects shown">06</div>
+
+  <div class="tags" id="tags" role="group" aria-label="Filter projects">
+    <button class="chip" type="button" data-tag="all" aria-pressed="true">All</button>
+    <button class="chip" type="button" data-tag="web" aria-pressed="false">Web</button>
+    <button class="chip" type="button" data-tag="pwa" aria-pressed="false">PWA</button>
+    <button class="chip" type="button" data-tag="game" aria-pressed="false">Game</button>
+    <button class="chip" type="button" data-tag="finance" aria-pressed="false">Finance</button>
+    <button class="chip" type="button" data-tag="weather" aria-pressed="false">Weather</button>
+    <button class="chip" type="button" data-tag="planner" aria-pressed="false">Planner</button>
+    <button class="chip" type="button" data-tag="team" aria-pressed="false">Team</button>
+    <button class="chip" type="button" data-tag="typescript" aria-pressed="false">TypeScript</button>
+    <button class="chip" type="button" data-tag="javascript" aria-pressed="false">JavaScript</button>
+  </div>
+
+  <div class="list" id="list">
+    <a class="card" href="https://handa-ph-iota.vercel.app" target="_blank" rel="noopener" data-tags="web pwa weather typescript">
+      <div class="thumb"><img src="assets/handa-ph.png" alt="Handa PH home screen with a location search card" loading="lazy" width="1280" height="640"></div>
+      <div class="meta"><span>Handa PH
+Typhoon alerts</span><span>PWA
+TypeScript</span></div>
+    </a>
+    <a class="card" href="https://budgettracker-snowy.vercel.app" target="_blank" rel="noopener" data-tags="web pwa finance typescript">
+      <div class="thumb"><video src="assets/budgettracker.mp4" poster="assets/budgettracker.png" autoplay muted loop playsinline preload="metadata" aria-label="BudgetTracker promo video" style="object-position: 50% 30%"></video></div>
+      <div class="meta"><span>BudgetTracker
+Personal budget</span><span>Web app
+TypeScript</span></div>
+    </a>
+    <a class="card" href="https://daily-intentionality-scheduler-six.vercel.app" target="_blank" rel="noopener" data-tags="web pwa planner javascript">
+      <div class="thumb"><img src="assets/scheduler.png" alt="Daily Intentionality Scheduler inventory of time blocks" loading="lazy" width="1280" height="640"></div>
+      <div class="meta"><span>Daily Scheduler
+Intention blocks</span><span>iPad PWA
+JavaScript</span></div>
+    </a>
+    <a class="card" href="https://tetro-flow.vercel.app" target="_blank" rel="noopener" data-tags="web game javascript">
+      <div class="thumb"><img src="assets/testris.png" alt="Testris title screen with three difficulty cards" loading="lazy" width="1280" height="640"></div>
+      <div class="meta"><span>Testris
+Battle 2P vs bot</span><span>Browser game
+JavaScript</span></div>
+    </a>
+    <a class="card" href="https://brightsmile.pro" target="_blank" rel="noopener" data-tags="web team typescript">
+      <div class="thumb"><img src="assets/brightsmile.png" alt="Bright Smile dental clinic homepage" loading="lazy" width="1280" height="640"></div>
+      <div class="meta"><span>BrightSmile
+Dental clinic site</span><span>Team build
+TypeScript</span></div>
+    </a>
+    <a class="card" href="https://github.com/Kekmw/OrgManager" target="_blank" rel="noopener" data-tags="web team">
+      <div class="thumb"><div class="none">Code only</div></div>
+      <div class="meta"><span>OrgManager
+Organization tool</span><span>Team build
+PHP</span></div>
+    </a>
+  </div>
+
+  <aside class="about">
+    <section class="info">
+      <h2>[info]</h2>
+      <p>Projects are shipped as I build them. Some are solo, some are team work, and a few may not run on every device.</p>
+    </section>
+    <section>
+      <h2>[about]</h2>
+      <p>IT student in the Philippines. I build web apps and follow ideas through to deployment.</p>
+      <p>Open to internship opportunities.</p>
+    </section>
+    <section class="m-projects">
+      <h2>[projects]</h2>
+      <a href="https://handa-ph-iota.vercel.app" target="_blank" rel="noopener">Handa PH</a>
+      <a href="https://budgettracker-snowy.vercel.app" target="_blank" rel="noopener">BudgetTracker</a>
+      <a href="https://daily-intentionality-scheduler-six.vercel.app" target="_blank" rel="noopener">Daily Scheduler</a>
+      <a href="https://tetro-flow.vercel.app" target="_blank" rel="noopener">Testris</a>
+      <a href="https://brightsmile.pro" target="_blank" rel="noopener">BrightSmile</a>
+      <a href="https://github.com/Kekmw/OrgManager" target="_blank" rel="noopener">OrgManager</a>
+    </section>
+    <section class="learning">
+      <h2>[learning]</h2>
+      <ul>
+        <li>TypeScript</li>
+        <li>SQL</li>
+        <li>Cybersecurity</li>
+      </ul>
+    </section>
+    <section>
+      <h2>[connect]</h2>
+      <a href="#">Index / Justine Rivera</a>
+      <a href="https://github.com/jeizu-ri" target="_blank" rel="noopener">GitHub / jeizu-ri</a>
+      <a href="mailto:justinerivera.tech@gmail.com">Mail / justinerivera.tech@gmail.com</a>
+    </section>
+  </aside>
+</div>
+
+<script>
+/* ------------------------------------------------------------------ UI */
+(function () {
+  var chips = document.querySelectorAll('.chip');
+  var cards = document.querySelectorAll('.card');
+  var list = document.getElementById('list');
+  var counter = document.getElementById('counter');
+
+  function apply(tag) {
+    var shown = 0;
+    cards.forEach(function (c) {
+      var ok = tag === 'all' || c.dataset.tags.split(' ').indexOf(tag) !== -1;
+      c.hidden = !ok;
+      if (ok) shown++;
+    });
+    counter.textContent = (shown < 10 ? '0' : '') + shown;
+    list.scrollTop = 0;
+  }
+  chips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      chips.forEach(function (c) { c.setAttribute('aria-pressed', c === chip ? 'true' : 'false'); });
+      apply(chip.dataset.tag);
+    });
+  });
+
+  var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('video').forEach(function (v) {
+    if (still) { v.removeAttribute('autoplay'); v.pause(); return; }
+    v.muted = true;
+    var go = function () { var p = v.play(); if (p && p.catch) p.catch(function () {}); };
+    v.addEventListener('loadeddata', go);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) go(); });
+    go();
+  });
+})();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js"></script>
+<script>
+/* ------------------------------------------------------- Particle hero */
+(function () {
+  if (!window.THREE) return;
+  var canvas = document.getElementById('bg');
+  var renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false, alpha: false, powerPreference: 'high-performance' });
+  } catch (e) { return; }
+  if (!renderer.capabilities.isWebGL2 || !renderer.extensions.has('EXT_color_buffer_float')) return;
+
+  var DPR = Math.min(window.devicePixelRatio || 1, 2);
+  var mobile = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 760;
+  var SIZE = mobile ? 128 : 512;
+  renderer.setPixelRatio(DPR);
+  renderer.setClearColor(0x000000, 1);
+  renderer.setSize(window.innerWidth, window.innerHeight, false);
+
+  /* ---------- full-screen pass helper ---------- */
+  var quadScene = new THREE.Scene();
+  var quadCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  var quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2));
+  quad.frustumCulled = false;
+  quadScene.add(quad);
+  function pass(mat, target) {
+    quad.material = mat;
+    renderer.setRenderTarget(target);
+    renderer.render(quadScene, quadCam);
+  }
+
+  /* ---------- fluid simulation ---------- */
+  var SIM = 256, DYE = 512;
+  var FLUID_VERT = [
+    'uniform vec2 texelSize;',
+    'varying vec2 vUv; varying vec2 vL; varying vec2 vR; varying vec2 vT; varying vec2 vB;',
+    'void main(){',
+    '  vUv = position.xy * 0.5 + 0.5;',
+    '  vL = vUv - vec2(texelSize.x, 0.0); vR = vUv + vec2(texelSize.x, 0.0);',
+    '  vT = vUv + vec2(0.0, texelSize.y); vB = vUv - vec2(0.0, texelSize.y);',
+    '  gl_Position = vec4(position.xy, 0.0, 1.0);',
+    '}'
+  ].join('\n');
+
+  function fluidMat(frag, uniforms) {
+    uniforms = uniforms || {};
+    uniforms.texelSize = { value: new THREE.Vector2(1 / SIM, 1 / SIM) };
+    return new THREE.ShaderMaterial({ vertexShader: FLUID_VERT, fragmentShader: frag, uniforms: uniforms, depthTest: false, depthWrite: false });
+  }
+
+  function rt(w, h, type, filter) {
+    return new THREE.WebGLRenderTarget(w, h, {
+      type: type, format: THREE.RGBAFormat, minFilter: filter, magFilter: filter,
+      depthBuffer: false, stencilBuffer: false
+    });
+  }
+  function dbl(w, h) {
+    var o = { read: rt(w, h, THREE.HalfFloatType, THREE.LinearFilter), write: rt(w, h, THREE.HalfFloatType, THREE.LinearFilter) };
+    o.swap = function () { var t = o.read; o.read = o.write; o.write = t; };
+    return o;
+  }
+  var vel = dbl(SIM, SIM), den = dbl(DYE, DYE), pres = dbl(SIM, SIM);
+  var curlRT = rt(SIM, SIM, THREE.HalfFloatType, THREE.NearestFilter);
+  var divRT = rt(SIM, SIM, THREE.HalfFloatType, THREE.NearestFilter);
+
+  var splatMat = fluidMat([
+    'uniform sampler2D uTarget; uniform float aspect; uniform vec3 color; uniform vec2 p0; uniform vec2 p1; uniform float radius;',
+    'varying vec2 vUv;',
+    'void main(){',
+    '  vec2 pa = (vUv - p0) * vec2(aspect, 1.0);',
+    '  vec2 ba = (p1 - p0) * vec2(aspect, 1.0);',
+    '  float h = clamp(dot(pa, ba) / max(dot(ba, ba), 1e-8), 0.0, 1.0);',
+    '  float d = length(pa - ba * h);',
+    '  float s = exp(-d * d / max(radius * radius, 1e-8));',
+    '  gl_FragColor = vec4(texture2D(uTarget, vUv).xyz + color * s, 1.0);',
+    '}'
+  ].join('\n'), { uTarget: { value: null }, aspect: { value: 1 }, color: { value: new THREE.Vector3() }, p0: { value: new THREE.Vector2() }, p1: { value: new THREE.Vector2() }, radius: { value: 0.1 } });
+
+  var curlMat = fluidMat([
+    'uniform sampler2D uVelocity; varying vec2 vUv; varying vec2 vL; varying vec2 vR; varying vec2 vT; varying vec2 vB;',
+    'void main(){',
+    '  float L = texture2D(uVelocity, vL).y; float R = texture2D(uVelocity, vR).y;',
+    '  float T = texture2D(uVelocity, vT).x; float B = texture2D(uVelocity, vB).x;',
+    '  gl_FragColor = vec4(0.5 * (R - L - T + B), 0.0, 0.0, 1.0);',
+    '}'
+  ].join('\n'), { uVelocity: { value: null } });
+
+  var vortMat = fluidMat([
+    'uniform sampler2D uVelocity; uniform sampler2D uCurl; uniform float curl; uniform float dt;',
+    'varying vec2 vUv; varying vec2 vL; varying vec2 vR; varying vec2 vT; varying vec2 vB;',
+    'void main(){',
+    '  float L = texture2D(uCurl, vL).x; float R = texture2D(uCurl, vR).x;',
+    '  float T = texture2D(uCurl, vT).x; float B = texture2D(uCurl, vB).x;',
+    '  float C = texture2D(uCurl, vUv).x;',
+    '  vec2 force = 0.5 * vec2(abs(T) - abs(B), abs(R) - abs(L));',
+    '  force /= length(force) + 0.0001;',
+    '  force *= curl * C; force.y *= -1.0;',
+    '  vec2 v = texture2D(uVelocity, vUv).xy + force * dt;',
+    '  gl_FragColor = vec4(clamp(v, -1000.0, 1000.0), 0.0, 1.0);',
+    '}'
+  ].join('\n'), { uVelocity: { value: null }, uCurl: { value: null }, curl: { value: 30 }, dt: { value: 1 / 60 } });
+
+  var divMat = fluidMat([
+    'uniform sampler2D uVelocity; varying vec2 vUv; varying vec2 vL; varying vec2 vR; varying vec2 vT; varying vec2 vB;',
+    'void main(){',
+    '  float L = texture2D(uVelocity, vL).x; float R = texture2D(uVelocity, vR).x;',
+    '  float T = texture2D(uVelocity, vT).y; float B = texture2D(uVelocity, vB).y;',
+    '  vec2 C = texture2D(uVelocity, vUv).xy;',
+    '  if (vL.x < 0.0) L = -C.x; if (vR.x > 1.0) R = -C.x;',
+    '  if (vT.y > 1.0) T = -C.y; if (vB.y < 0.0) B = -C.y;',
+    '  gl_FragColor = vec4(0.5 * (R - L + T - B), 0.0, 0.0, 1.0);',
+    '}'
+  ].join('\n'), { uVelocity: { value: null } });
+
+  var clearMat = fluidMat([
+    'uniform sampler2D uTexture; uniform float value; varying vec2 vUv;',
+    'void main(){ gl_FragColor = value * texture2D(uTexture, vUv); }'
+  ].join('\n'), { uTexture: { value: null }, value: { value: 0.95 } });
+
+  var pressMat = fluidMat([
+    'uniform sampler2D uPressure; uniform sampler2D uDivergence; varying vec2 vUv; varying vec2 vL; varying vec2 vR; varying vec2 vT; varying vec2 vB;',
+    'void main(){',
+    '  float L = texture2D(uPressure, vL).x; float R = texture2D(uPressure, vR).x;',
+    '  float T = texture2D(uPressure, vT).x; float B = texture2D(uPressure, vB).x;',
+    '  float div = texture2D(uDivergence, vUv).x;',
+    '  gl_FragColor = vec4((L + R + B + T - div) * 0.25, 0.0, 0.0, 1.0);',
+    '}'
+  ].join('\n'), { uPressure: { value: null }, uDivergence: { value: null } });
+
+  var gradMat = fluidMat([
+    'uniform sampler2D uPressure; uniform sampler2D uVelocity; varying vec2 vUv; varying vec2 vL; varying vec2 vR; varying vec2 vT; varying vec2 vB;',
+    'void main(){',
+    '  float L = texture2D(uPressure, vL).x; float R = texture2D(uPressure, vR).x;',
+    '  float T = texture2D(uPressure, vT).x; float B = texture2D(uPressure, vB).x;',
+    '  vec2 v = texture2D(uVelocity, vUv).xy - vec2(R - L, T - B);',
+    '  gl_FragColor = vec4(v, 0.0, 1.0);',
+    '}'
+  ].join('\n'), { uPressure: { value: null }, uVelocity: { value: null } });
+
+  var advMat = fluidMat([
+    'uniform sampler2D uVelocity; uniform sampler2D uSource; uniform float dt; uniform float dissipation; varying vec2 vUv;',
+    'void main(){',
+    '  vec2 coord = vUv - dt * texture2D(uVelocity, vUv).xy * texelSize;',
+    '  gl_FragColor = dissipation * texture2D(uSource, coord);',
+    '}'
+  ].join('\n').replace('uniform sampler2D uVelocity;', 'uniform vec2 texelSize; uniform sampler2D uVelocity;'),
+  { uVelocity: { value: null }, uSource: { value: null }, dt: { value: 1 / 60 }, dissipation: { value: 1 } });
+
+  function splat(target, p0, p1, color, radius, aspect) {
+    splatMat.uniforms.uTarget.value = target.read.texture;
+    splatMat.uniforms.aspect.value = aspect;
+    splatMat.uniforms.color.value.set(color[0], color[1], color[2]);
+    splatMat.uniforms.p0.value.set(p0[0], p0[1]);
+    splatMat.uniforms.p1.value.set(p1[0], p1[1]);
+    splatMat.uniforms.radius.value = radius;
+    pass(splatMat, target.write);
+    target.swap();
+  }
+
+  function fluidStep() {
+    curlMat.uniforms.uVelocity.value = vel.read.texture;
+    pass(curlMat, curlRT);
+
+    vortMat.uniforms.uVelocity.value = vel.read.texture;
+    vortMat.uniforms.uCurl.value = curlRT.texture;
+    pass(vortMat, vel.write); vel.swap();
+
+    divMat.uniforms.uVelocity.value = vel.read.texture;
+    pass(divMat, divRT);
+
+    clearMat.uniforms.uTexture.value = pres.read.texture;
+    clearMat.uniforms.value.value = 0.95;
+    pass(clearMat, pres.write); pres.swap();
+
+    pressMat.uniforms.uDivergence.value = divRT.texture;
+    for (var i = 0; i < 5; i++) {
+      pressMat.uniforms.uPressure.value = pres.read.texture;
+      pass(pressMat, pres.write); pres.swap();
+    }
+
+    gradMat.uniforms.uPressure.value = pres.read.texture;
+    gradMat.uniforms.uVelocity.value = vel.read.texture;
+    pass(gradMat, vel.write); vel.swap();
+
+    advMat.uniforms.uVelocity.value = vel.read.texture;
+    advMat.uniforms.uSource.value = vel.read.texture;
+    advMat.uniforms.dissipation.value = 0.98;
+    pass(advMat, vel.write); vel.swap();
+
+    advMat.uniforms.uVelocity.value = vel.read.texture;
+    advMat.uniforms.uSource.value = den.read.texture;
+    advMat.uniforms.dissipation.value = 0.97;
+    pass(advMat, den.write); den.swap();
+  }
+
+  /* ---------- particle simulation ---------- */
+  var COUNT = SIZE * SIZE;
+  var originData = new Float32Array(COUNT * 4);
+  for (var i = 0; i < COUNT; i++) {
+    originData[i * 4] = Math.random() * 2 - 1;
+    originData[i * 4 + 1] = Math.random() * 2 - 1;
+    originData[i * 4 + 2] = Math.random() * 2 - 1;
+    originData[i * 4 + 3] = 1;
+  }
+  var originTex = new THREE.DataTexture(originData, SIZE, SIZE, THREE.RGBAFormat, THREE.FloatType);
+  originTex.minFilter = originTex.magFilter = THREE.NearestFilter;
+  originTex.needsUpdate = true;
+
+  function posRT() {
+    return new THREE.WebGLRenderTarget(SIZE, SIZE, { type: THREE.FloatType, format: THREE.RGBAFormat, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, depthBuffer: false, stencilBuffer: false });
+  }
+  var posA = posRT(), posB = posRT();
+  var posRead = null, posWrite = posA, posOther = posB, firstFrame = true;
+
+  var SIM_FRAG = [
+    'uniform sampler2D tPos; uniform sampler2D tOrigin; uniform sampler2D uVel; uniform sampler2D uDen;',
+    'uniform float time; uniform float HZ; uniform mat4 uProj; uniform mat4 uModel; uniform mat3 uNormal;',
+    'varying vec2 vUv;',
+
+    /* analytic curl of three sine-sum potentials */
+    'vec3 curlNoise(vec3 p){',
+    '  vec3 c = vec3(0.0);',
+    '  for (int i = 0; i < 3; i++){',
+    '    float f = 1.0 + float(i) * 1.37; float ph = float(i) * 2.1;',
+    '    float a = f * 1.7, b = f * 2.3, d = f * 1.9, e = f * 2.1, g = f * 1.3, h = f * 2.7;',
+    '    float cx = cos(a * p.y + b * p.z + ph);',
+    '    float cy = cos(d * p.z + e * p.x + ph * 1.3);',
+    '    float cz = cos(g * p.x + h * p.y + ph * 0.7);',
+    '    c += vec3(h * cz - d * cy, b * cx - g * cz, e * cy - a * cx) / f;',
+    '  }',
+    '  return normalize(c + 1e-6);',
+    '}',
+
+    /* sculpted form: a twisted, lobed ribbon ring with one large opening */
+    'vec3 qrot(vec3 p){ return vec3(p.z, p.x, p.y); }', /* quaternion (0.5,0.5,0.5,0.5) */
+    'float sdfShape(vec3 p){',
+    '  p.z = sqrt(p.z * p.z + 0.0215) - sqrt(0.012);',
+    '  p = qrot(p);',
+    '  if (length(p) > 0.8) return length(p) - 0.7;',
+    '  float ang = atan(p.z, p.y);',
+    '  float R = length(p.yz);',
+    '  float ring = 0.19 + 0.035 * sin(ang * 2.0 + 0.8) + 0.015 * sin(ang * 3.0);',
+    '  vec2 t = vec2(R - ring, p.x + 0.055 * sin(ang + 0.6));',
+    '  float tw = ang * 1.0 + 0.5;',
+    '  float cs = cos(tw), sn = sin(tw);',
+    '  t = vec2(cs * t.x - sn * t.y, sn * t.x + cs * t.y);',
+    '  float a = 0.1 * (1.0 + 0.3 * sin(ang * 3.0 + 1.0));',
+    '  float b = 0.045;',
+    '  float d = (length(t / vec2(a, b)) - 1.0) * b;',
+    '  return d * 0.8;',
+    '}',
+    'vec3 sdfNormal(vec3 p){',
+    '  float e = 0.001;',
+    '  vec3 n = vec3(',
+    '    sdfShape(p + vec3(e, 0.0, 0.0)) - sdfShape(p - vec3(e, 0.0, 0.0)),',
+    '    sdfShape(p + vec3(0.0, e, 0.0)) - sdfShape(p - vec3(0.0, e, 0.0)),',
+    '    sdfShape(p + vec3(0.0, 0.0, e)) - sdfShape(p - vec3(0.0, 0.0, e)));',
+    '  return normalize(n + 1e-7);',
+    '}',
+
+    'void main(){',
+    '  vec3 pos = texture2D(tPos, vUv).xyz;',
+    '  vec3 origin = texture2D(tOrigin, vUv).xyz;',
+    '  if (length(pos) > 0.7) pos /= 2.0;',
+    '  pos += curlNoise(pos * 0.1 + time * 0.05) * 1.0 * 0.0002 * HZ;',
+    '  vec3 gradient = sdfNormal(pos);',
+    '  float sdf = sdfShape(pos);',
+    '  pos += cross(normalize(pos + 1e-6), gradient) * 0.0005;',
+    '  pos += -gradient * sdf * 0.06;',
+    '  pos += (origin - pos) * 0.0002 * HZ;',
+    '  vec4 clip = uProj * uModel * vec4(pos, 1.0);',
+    '  vec2 suv = clip.xy / clip.w * 0.5 + 0.5;',
+    '  vec3 flow = uNormal * vec3(texture2D(uVel, suv).xy, 0.0);',
+    '  float dens = clamp(texture2D(uDen, suv).r, 0.0, 1.0);',
+    '  pos += flow * 0.0001 * HZ * 0.4 * dens;',
+    '  gl_FragColor = vec4(pos, 1.0);',
+    '}'
+  ].join('\n');
+
+  var simMat = new THREE.ShaderMaterial({
+    vertexShader: 'varying vec2 vUv; void main(){ vUv = position.xy * 0.5 + 0.5; gl_Position = vec4(position.xy, 0.0, 1.0); }',
+    fragmentShader: SIM_FRAG,
+    uniforms: {
+      tPos: { value: null }, tOrigin: { value: originTex }, uVel: { value: null }, uDen: { value: null },
+      time: { value: 0 }, HZ: { value: 1 },
+      uProj: { value: new THREE.Matrix4() }, uModel: { value: new THREE.Matrix4() }, uNormal: { value: new THREE.Matrix3() }
+    },
+    depthTest: false, depthWrite: false
+  });
+
+  /* ---------- scene ---------- */
+  var camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 1000);
+  var BASE = new THREE.Vector3(-1.17, 0, 6);
+  camera.position.copy(BASE);
+  camera.lookAt(0, 0, 0);
+
+  var scene = new THREE.Scene();
+  var group = new THREE.Group();
+  var D2R = Math.PI / 180;
+  group.position.set(0.343, 0.16, -1);
+  group.rotation.set(-28.4 * D2R, 390 * D2R, 4.92 * D2R);
+  group.scale.set(5, 5, 6);
+  scene.add(group);
+
+  var uvs = new Float32Array(COUNT * 3);
+  var rnd = new Float32Array(COUNT * 4);
+  for (var k = 0; k < COUNT; k++) {
+    uvs[k * 3] = ((k % SIZE) + 0.5) / SIZE;
+    uvs[k * 3 + 1] = (Math.floor(k / SIZE) + 0.5) / SIZE;
+    uvs[k * 3 + 2] = 0;
+    rnd[k * 4] = Math.random(); rnd[k * 4 + 1] = Math.random();
+    rnd[k * 4 + 2] = Math.random(); rnd[k * 4 + 3] = Math.random();
+  }
+  var geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(uvs, 3));
+  geo.setAttribute('random', new THREE.BufferAttribute(rnd, 4));
+
+  /* soft grey matcap, drawn once */
+  var mc = document.createElement('canvas');
+  mc.width = mc.height = 64;
+  var mx = mc.getContext('2d');
+  var grad = mx.createRadialGradient(24, 22, 2, 32, 32, 32);
+  grad.addColorStop(0, '#f2f2f2'); grad.addColorStop(0.45, '#a8a8a8'); grad.addColorStop(1, '#3a3a3a');
+  mx.fillStyle = grad; mx.fillRect(0, 0, 64, 64);
+  var matcap = new THREE.CanvasTexture(mc);
+
+  var pointsMat = new THREE.ShaderMaterial({
+    transparent: true, depthTest: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    uniforms: { tPos: { value: null }, tMatcap: { value: matcap }, time: { value: 0 }, DPR: { value: DPR }, uGain: { value: 2.0 } },
+    vertexShader: [
+      'uniform sampler2D tPos; uniform float DPR;',
+      'attribute vec4 random; varying vec4 vRandom; varying float vScale;',
+      'void main(){',
+      '  vec3 pos = texture2D(tPos, position.xy).xyz;',
+      '  pos *= mix(1.0, 1.5, pow(random.y, 150.0));',
+      '  vec4 mv = modelViewMatrix * vec4(pos, 1.0);',
+      '  float d = length(mv.xyz);',
+      '  float scale = smoothstep(3.0, 15.0, d) * mix(0.5, 1.0, random.z);',
+      '  vScale = scale; vRandom = random;',
+      '  gl_Position = projectionMatrix * mv;',
+      '  gl_PointSize = 0.04 * DPR * 2.0 * scale * (1000.0 / d);',
+      '}'
+    ].join('\n'),
+    fragmentShader: [
+      'uniform sampler2D tMatcap; uniform float time; uniform float uGain;',
+      'varying vec4 vRandom; varying float vScale;',
+      'vec3 softLight(vec3 a, vec3 b){ return (1.0 - 2.0 * b) * a * a + 2.0 * b * a; }',
+      'vec3 overlay(vec3 a, vec3 b){ return mix(2.0 * a * b, 1.0 - 2.0 * (1.0 - a) * (1.0 - b), step(0.5, a)); }',
+      'void main(){',
+      '  vec2 c = gl_PointCoord - 0.5;',
+      '  if (length(c) > 0.5) discard;',
+      '  if (vScale < 0.1) discard;',
+      '  vec3 col = vec3(mix(0.0, 0.2, vRandom.x));',
+      '  col = mix(col, vec3(0.6, 0.45, 1.0), pow(vRandom.z, 100.0));',
+      '  float sparkle = 0.5 + (0.4 + sin(time * 4.0 + vRandom.y * 20.0)) * pow(vRandom.z, 10.0) * 2.5;',
+      '  col *= sparkle * uGain;',
+      '  float a = sin(time + vRandom.z * 20.0) * 0.5 + 1.0;',
+      '  mat2 r = mat2(cos(a), -sin(a), sin(a), cos(a));',
+      '  vec3 m = texture2D(tMatcap, r * c + 0.5).rgb;',
+      '  col = mix(col, softLight(col, m), 0.8);',
+      '  col = mix(col, overlay(col, m), 0.2);',
+      '  gl_FragColor = vec4(col, 1.0);',
+      '}'
+    ].join('\n')
+  });
+  var points = new THREE.Points(geo, pointsMat);
+  points.frustumCulled = false;
+  group.add(points);
+
+  /* ---------- input ---------- */
+  var mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+  var prev = { x: mouse.x, y: mouse.y };
+  var lastSplat = 0;
+  window.addEventListener('mousemove', function (e) { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+  window.addEventListener('pointermove', function (e) { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+  function touch(e) { if (e.touches && e.touches[0]) { mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; } }
+  window.addEventListener('touchstart', touch, { passive: true });
+  window.addEventListener('touchmove', touch, { passive: true });
+
+  window.addEventListener('resize', function () {
+    renderer.setSize(window.innerWidth, window.innerHeight, false);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+  });
+
+  function clampMap(v, a, b, c, d) { var t = Math.min(1, Math.max(0, (v - a) / (b - a))); return c + (d - c) * t; }
+
+  /* ---------- frame ---------- */
+  var target = new THREE.Vector3();
+  var tmpProj = new THREE.Matrix4();
+  var last = performance.now();
+
+  function frame(now) {
+    requestAnimationFrame(frame);
+    var w = window.innerWidth, h = window.innerHeight;
+    var dt = Math.min((now - last) / 1000, 1 / 20); last = now;
+    var HZ = Math.max(dt, 1 / 240) * 60;
+    var t = now / 1000;
+
+    /* gaze camera */
+    var gx = (mouse.x / w) * 2 - 1, gy = (mouse.y / h) * 2 - 1;
+    target.set(BASE.x + gx * -1, BASE.y + gy * 2, BASE.z);
+    camera.position.lerp(target, 0.05);
+    camera.lookAt(0, 0, 0);
+    camera.updateMatrixWorld();
+    group.updateMatrixWorld(true);
+
+    /* mouse -> fluid */
+    var dx = mouse.x - prev.x, dy = mouse.y - prev.y;
+    var len = Math.sqrt(dx * dx + dy * dy);
+    if (len > 0.01) {
+      var radius = clampMap(len, 0, 5, 0, 60) * 0.6 * (mobile ? 0.8 : 1);
+      var mult = clampMap(len, 0, 15, 0, 10);
+      var p1 = [mouse.x / w, 1 - mouse.y / h];
+      var p0 = (now - lastSplat > 50) ? p1 : [prev.x / w, 1 - prev.y / h];
+      var aspect = w / h;
+      splat(vel, p0, p1, [dx * mult, -dy * mult, 1], radius / 200, aspect);
+      splat(den, p0, p1, [1, 1, 1], radius / 200, aspect);
+      lastSplat = now;
+    }
+    prev.x = mouse.x; prev.y = mouse.y;
+    fluidStep();
+
+    /* particles */
+    tmpProj.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+    var u = simMat.uniforms;
+    u.uProj.value.copy(tmpProj);
+    u.uModel.value.copy(group.matrixWorld);
+    u.uNormal.value.setFromMatrix4(camera.matrixWorld);
+    u.time.value = t; u.HZ.value = HZ;
+    u.uVel.value = vel.read.texture;
+    u.uDen.value = den.read.texture;
+    u.tPos.value = firstFrame ? originTex : posRead.texture;
+    pass(simMat, posWrite);
+    posRead = posWrite;
+    var tmp = posWrite; posWrite = posOther; posOther = tmp;
+    firstFrame = false;
+
+    pointsMat.uniforms.tPos.value = posRead.texture;
+    pointsMat.uniforms.time.value = t;
+    renderer.setRenderTarget(null);
+    renderer.render(scene, camera);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
