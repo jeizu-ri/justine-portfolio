@@ -40,15 +40,6 @@ a:focus-visible, button:focus-visible { outline: 1px solid var(--accent); outlin
 .brand-name { font-size: 26px; font-weight: 400; color: #fff; line-height: 1.12; letter-spacing: 0.01em; }
 .brand-sub { font-size: 11px; color: var(--muted); margin-top: 8px; }
 
-/* Counter */
-.counter {
-  position: absolute; top: 24px; right: 24px;
-  width: 44px; height: 44px; border-radius: 50%;
-  border: 1px solid var(--line); background: #0a0a0a;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; color: #fff; font-variant-numeric: tabular-nums;
-}
-
 /* Tags */
 .tags { position: absolute; top: 120px; left: 24px; width: 320px; display: flex; flex-wrap: wrap; gap: 6px; mix-blend-mode: plus-lighter; }
 .chip {
@@ -124,8 +115,6 @@ a:focus-visible, button:focus-visible { outline: 1px solid var(--accent); outlin
     <h1 class="brand-name">Justine Lawrence<br>Rivera</h1>
     <div class="brand-sub">Web developer / IT student</div>
   </header>
-
-  <div class="counter" id="counter" role="status" aria-label="Projects shown">06</div>
 
   <div class="tags" id="tags" role="group" aria-label="Filter projects">
     <button class="chip" type="button" data-tag="all" aria-pressed="true">All</button>
@@ -213,16 +202,11 @@ PHP</span></div>
   var chips = document.querySelectorAll('.chip');
   var cards = document.querySelectorAll('.card');
   var list = document.getElementById('list');
-  var counter = document.getElementById('counter');
 
   function apply(tag) {
-    var shown = 0;
     cards.forEach(function (c) {
-      var ok = tag === 'all' || c.dataset.tags.split(' ').indexOf(tag) !== -1;
-      c.hidden = !ok;
-      if (ok) shown++;
+      c.hidden = !(tag === 'all' || c.dataset.tags.split(' ').indexOf(tag) !== -1);
     });
-    counter.textContent = (shown < 10 ? '0' : '') + shown;
     list.scrollTop = 0;
   }
   chips.forEach(function (chip) {
