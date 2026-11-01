@@ -41,7 +41,7 @@ a:focus-visible, button:focus-visible { outline: 1px solid var(--accent); outlin
 .brand-sub { font-size: 11px; color: var(--muted); margin-top: 8px; }
 
 /* Tags */
-.tags { position: absolute; top: 120px; left: 24px; width: 320px; display: flex; flex-wrap: wrap; gap: 6px; mix-blend-mode: plus-lighter; }
+.tags { position: absolute; top: 120px; left: 24px; width: 320px; display: flex; flex-wrap: wrap; gap: 6px; }
 .chip {
   pointer-events: auto; cursor: pointer;
   font: inherit; font-size: 11px; letter-spacing: inherit; text-transform: inherit;
@@ -71,7 +71,7 @@ a:focus-visible, button:focus-visible { outline: 1px solid var(--accent); outlin
   background-image: radial-gradient(circle, #2a2a2a 1px, transparent 1.5px);
   background-size: 12px 12px;
 }
-.meta { display: flex; justify-content: space-between; gap: 16px; margin-top: 10px; font-size: 12px; white-space: pre-line; }
+.meta { display: flex; justify-content: space-between; gap: 16px; margin-top: 10px; font-size: 12px; white-space: pre-line; text-shadow: 0 0 2px #000, 0 0 8px #000, 0 0 18px rgba(0, 0, 0, .95); }
 .meta span:first-child { color: #fff; }
 .meta span:last-child { color: var(--muted); text-align: right; }
 
@@ -554,9 +554,14 @@ PHP</span></div>
     var w = window.innerWidth, ar = w / window.innerHeight;
     var s, x, y;
     if (w <= 760) { s = 3.1; x = 0.0; y = 0.85; }
-    else if (w <= 1100) { s = 5.4; x = 0.7; y = 0.0; }
-    else { s = 7.0; x = 1.15; y = -0.05; }
-    if (ar < 1.2 && w > 760) { s *= 0.8; }
+    else if (w <= 1100) { s = 7.0; x = 0.2 * ar; y = 0.0; }
+    else {
+      // ring is taller than the screen and sits slightly right of center,
+      // so its band crosses both the card column and the text column
+      s = 9.4 * Math.min(1, ar / 1.7);
+      x = 0.2 * ar; y = 0.0;
+    }
+    if (ar < 1.2 && w > 760) { s *= 0.85; }
     group.position.set(x, y, -1);
     group.scale.set(s, s, s * 1.2);
   }
