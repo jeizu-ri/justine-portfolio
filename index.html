@@ -529,7 +529,7 @@ PHP</span></div>
     '  float dens = clamp(texture2D(uDen, suv).r, 0.0, 1.0);',
     '  vec3 push = flow * 0.0001 * HZ * 0.8 * dens;',
     '  float pl = length(push);',
-    '  if (pl > 0.015) push *= 0.015 / pl;',
+    '  if (pl > 0.005) push *= 0.005 / pl;',
     '  pos += push;',
     '  gl_FragColor = vec4(pos, 1.0);',
     '}'
@@ -629,8 +629,8 @@ PHP</span></div>
 
   /* ---------- input ---------- */
   var mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+  var smooth = { x: mouse.x, y: mouse.y };
   var prev = { x: mouse.x, y: mouse.y };
-  var lastSplat = 0;
   window.addEventListener('mousemove', function (e) { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
   window.addEventListener('pointermove', function (e) { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
   function touch(e) { if (e.touches && e.touches[0]) { mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; } }
@@ -670,19 +670,24 @@ PHP</span></div>
     group.updateMatrixWorld(true);
 
     /* mouse -> fluid */
-    var dx = mouse.x - prev.x, dy = mouse.y - prev.y;
+    /* the cursor is eased first, so quick flicks become one soft glide */
+    var ease = 1 - Math.pow(1 - 0.08, HZ);
+    smooth.x += (mouse.x - smooth.x) * ease;
+    smooth.y += (mouse.y - smooth.y) * ease;
+    var dx = smooth.x - prev.x, dy = smooth.y - prev.y;
     var len = Math.sqrt(dx * dx + dy * dy);
-    if (len > 0.01) {
-      var radius = clampMap(len, 0, 5, 0, 60) * 0.6 * (mobile ? 0.8 : 1);
-      var mult = clampMap(len, 0, 15, 0, 10);
-      var p1 = [mouse.x / w, 1 - mouse.y / h];
-      var p0 = (now - lastSplat > 50) ? p1 : [prev.x / w, 1 - prev.y / h];
+    if (len > 0.05) {
+      /* same gentle strength whether you drift or sweep: speed is capped */
+      var sp = Math.min(len, 10);
+      var k = sp / len;
+      var radius = clampMap(sp, 0, 6, 0.035, 0.07) * (mobile ? 0.8 : 1);
+      var p1 = [smooth.x / w, 1 - smooth.y / h];
+      var p0 = [prev.x / w, 1 - prev.y / h];
       var aspect = w / h;
-      splat(vel, p0, p1, [dx * mult, -dy * mult, 1], radius / 200, aspect);
-      splat(den, p0, p1, [1, 1, 1], radius / 200, aspect);
-      lastSplat = now;
+      splat(vel, p0, p1, [dx * k * 5, -dy * k * 5, 1], radius, aspect);
+      splat(den, p0, p1, [0.5, 0.5, 0.5], radius, aspect);
     }
-    prev.x = mouse.x; prev.y = mouse.y;
+    prev.x = smooth.x; prev.y = smooth.y;
     fluidStep();
 
     /* particles */
