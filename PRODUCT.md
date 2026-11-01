@@ -31,7 +31,7 @@ A portfolio that behaves like a studio logbook: real shipped projects, each link
 
 ## Brand Commitments
 
-The structure, layout, particle hero and measurements come from the user's AXON recreation brief and are binding. Content is Justine's own. Brand mark is the brief's placeholder until the user supplies a logo.
+The structure, layout, particle hero and measurements come from the user's AXON recreation brief and are binding. Content is Justine's own. Full name is Justine Lawrence Rivera. There is no logo yet, so the brand is the name in type only; do not invent one. Voice: first person, professional and a little cool, built around "doing it scared" (small scared steps beat standing still).
 
 ## Evidence on Hand
 

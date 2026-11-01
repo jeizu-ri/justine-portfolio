@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Justine Rivera — Developer portfolio</title>
-<meta name="description" content="Justine Rivera is an IT student in the Philippines who builds web apps and follows ideas through to deployment. A logbook of shipped projects: PWAs, finance tools, games and team builds.">
+<title>Justine Lawrence Rivera — Web developer</title>
+<meta name="description" content="Justine Lawrence Rivera is an IT student in the Philippines who builds web apps and follows ideas through to deployment. Shipped projects: PWAs, finance tools, games and team builds. Open to internships.">
 <meta name="theme-color" content="#000000">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23000'/%3E%3Ccircle cx='20' cy='20' r='18.5' fill='none' stroke='%23fff' stroke-width='1.6'/%3E%3Cpolygon fill='%23fff' points='20,11 21.34,16.77 26.36,13.64 23.23,18.66 29,20 23.23,21.34 26.36,26.36 21.34,23.23 20,29 18.66,23.23 13.64,26.36 16.77,21.34 11,20 16.77,18.66 13.64,13.64 18.66,16.77'/%3E%3C/svg%3E">
+<link rel="icon" href="data:,">
 <style>
 :root {
   --accent: #aa88ff;
@@ -36,10 +36,9 @@ a:focus-visible, button:focus-visible { outline: 1px solid var(--accent); outlin
 .ui { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
 
 /* Brand */
-.brand { position: absolute; top: 24px; left: 24px; display: flex; flex-direction: row; gap: 14px; align-items: center; mix-blend-mode: plus-lighter; }
-.brand svg { display: block; width: 40px; height: 40px; flex: none; }
-.brand-name { font-size: 20px; color: #fff; line-height: 1.1; }
-.brand-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.brand { position: absolute; top: 24px; left: 24px; mix-blend-mode: plus-lighter; }
+.brand-name { font-size: 26px; font-weight: 400; color: #fff; line-height: 1.12; letter-spacing: 0.01em; }
+.brand-sub { font-size: 11px; color: var(--muted); margin-top: 8px; }
 
 /* Counter */
 .counter {
@@ -122,14 +121,8 @@ a:focus-visible, button:focus-visible { outline: 1px solid var(--accent); outlin
 
 <div class="ui">
   <header class="brand">
-    <svg viewBox="0 0 40 40" aria-hidden="true">
-      <circle cx="20" cy="20" r="18.5" fill="none" stroke="#fff" stroke-width="1.6"/>
-      <polygon fill="#fff" points="20,11 21.34,16.77 26.36,13.64 23.23,18.66 29,20 23.23,21.34 26.36,26.36 21.34,23.23 20,29 18.66,23.23 13.64,26.36 16.77,21.34 11,20 16.77,18.66 13.64,13.64 18.66,16.77"/>
-    </svg>
-    <div>
-      <div class="brand-name">Justine Rivera</div>
-      <div class="brand-sub">Developer portfolio</div>
-    </div>
+    <h1 class="brand-name">Justine Lawrence<br>Rivera</h1>
+    <div class="brand-sub">Web developer / IT student</div>
   </header>
 
   <div class="counter" id="counter" role="status" aria-label="Projects shown">06</div>
@@ -189,12 +182,12 @@ PHP</span></div>
   <aside class="about">
     <section class="info">
       <h2>[info]</h2>
-      <p>Projects are shipped as I build them. Some are solo, some are team work, and a few may not run on every device.</p>
+      <p>Doing it scared. I second-guess most of what I build, but every scared step moves me a little further each day, and that beats standing still. I build with music on.</p>
     </section>
     <section>
       <h2>[about]</h2>
-      <p>IT student in the Philippines. I build web apps and follow ideas through to deployment.</p>
-      <p>Open to internship opportunities.</p>
+      <p>I'm Justine Lawrence Rivera, an IT student in the Philippines. I build web apps and follow ideas through to deployment.</p>
+      <p>I'm studying cybersecurity and open to internship opportunities.</p>
     </section>
     <section class="m-projects">
       <h2>[projects]</h2>
@@ -205,17 +198,9 @@ PHP</span></div>
       <a href="https://brightsmile.pro" target="_blank" rel="noopener">BrightSmile</a>
       <a href="https://github.com/Kekmw/OrgManager" target="_blank" rel="noopener">OrgManager</a>
     </section>
-    <section class="learning">
-      <h2>[learning]</h2>
-      <ul>
-        <li>TypeScript</li>
-        <li>SQL</li>
-        <li>Cybersecurity</li>
-      </ul>
-    </section>
     <section>
       <h2>[connect]</h2>
-      <a href="#">Index / Justine Rivera</a>
+      <a href="#">Index / Justine Lawrence Rivera</a>
       <a href="https://github.com/jeizu-ri" target="_blank" rel="noopener">GitHub / jeizu-ri</a>
       <a href="mailto:justinerivera.tech@gmail.com">Mail / justinerivera.tech@gmail.com</a>
     </section>
@@ -467,6 +452,23 @@ PHP</span></div>
   originTex.minFilter = originTex.magFilter = THREE.NearestFilter;
   originTex.needsUpdate = true;
 
+  /* every particle owns a home point on the torus: (u, v, shell). Density is
+     uniform over the surface via accept/reject on the tube angle. */
+  var T_MAJOR = 0.21, T_MINOR = 0.08;
+  var homeData = new Float32Array(COUNT * 4);
+  for (var h = 0; h < COUNT; h++) {
+    var tv;
+    do { tv = Math.random() * Math.PI * 2; }
+    while (Math.random() * (T_MAJOR + T_MINOR) > T_MAJOR + T_MINOR * Math.cos(tv));
+    homeData[h * 4] = Math.random() * Math.PI * 2;
+    homeData[h * 4 + 1] = tv;
+    homeData[h * 4 + 2] = Math.random();
+    homeData[h * 4 + 3] = 1;
+  }
+  var homeTex = new THREE.DataTexture(homeData, SIZE, SIZE, THREE.RGBAFormat, THREE.FloatType);
+  homeTex.minFilter = homeTex.magFilter = THREE.NearestFilter;
+  homeTex.needsUpdate = true;
+
   function posRT() {
     return new THREE.WebGLRenderTarget(SIZE, SIZE, { type: THREE.FloatType, format: THREE.RGBAFormat, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, depthBuffer: false, stencilBuffer: false });
   }
@@ -474,7 +476,7 @@ PHP</span></div>
   var posRead = null, posWrite = posA, posOther = posB, firstFrame = true;
 
   var SIM_FRAG = [
-    'uniform sampler2D tPos; uniform sampler2D tOrigin; uniform sampler2D uVel; uniform sampler2D uDen;',
+    'uniform sampler2D tPos; uniform sampler2D tHome; uniform sampler2D uVel; uniform sampler2D uDen;',
     'uniform float time; uniform float HZ; uniform mat4 uProj; uniform mat4 uModel; uniform mat3 uNormal;',
     'varying vec2 vUv;',
 
@@ -492,48 +494,43 @@ PHP</span></div>
     '  return normalize(c + 1e-6);',
     '}',
 
-    /* sculpted form: a twisted, lobed ribbon ring with one large opening */
-    'vec3 qrot(vec3 p){ return vec3(p.z, p.x, p.y); }', /* quaternion (0.5,0.5,0.5,0.5) */
+    /* the form: a plain, exact torus. The hole axis is local z. */
+    'const float T_R = 0.21; const float T_r = 0.08;',
     'float sdfShape(vec3 p){',
-    '  p.z = sqrt(p.z * p.z + 0.0215) - sqrt(0.012);',
-    '  p = qrot(p);',
-    '  if (length(p) > 0.8) return length(p) - 0.7;',
-    '  float ang = atan(p.z, p.y);',
-    '  float R = length(p.yz);',
-    '  float ring = 0.19 + 0.035 * sin(ang * 2.0 + 0.8) + 0.015 * sin(ang * 3.0);',
-    '  vec2 t = vec2(R - ring, p.x + 0.055 * sin(ang + 0.6));',
-    '  float tw = ang * 1.0 + 0.5;',
-    '  float cs = cos(tw), sn = sin(tw);',
-    '  t = vec2(cs * t.x - sn * t.y, sn * t.x + cs * t.y);',
-    '  float a = 0.1 * (1.0 + 0.3 * sin(ang * 3.0 + 1.0));',
-    '  float b = 0.045;',
-    '  float d = (length(t / vec2(a, b)) - 1.0) * b;',
-    '  return d * 0.8;',
+    '  vec2 q = vec2(length(p.xy) - T_R, p.z);',
+    '  return length(q) - T_r;',
     '}',
     'vec3 sdfNormal(vec3 p){',
-    '  float e = 0.001;',
-    '  vec3 n = vec3(',
-    '    sdfShape(p + vec3(e, 0.0, 0.0)) - sdfShape(p - vec3(e, 0.0, 0.0)),',
-    '    sdfShape(p + vec3(0.0, e, 0.0)) - sdfShape(p - vec3(0.0, e, 0.0)),',
-    '    sdfShape(p + vec3(0.0, 0.0, e)) - sdfShape(p - vec3(0.0, 0.0, e)));',
-    '  return normalize(n + 1e-7);',
+    '  float l = max(length(p.xy), 1e-5);',
+    '  vec2 q = vec2(l - T_R, p.z);',
+    '  return normalize(vec3(p.xy / l * q.x, q.y) + 1e-7);',
+    '}',
+    /* where particle i belongs on the torus; the ring slowly circulates */
+    'vec3 homePoint(vec3 h){',
+    '  float u = h.x + time * 0.08;',
+    '  float rr = T_r * (1.0 - 0.1 * h.z * h.z);',
+    '  float ring = T_R + rr * cos(h.y);',
+    '  return vec3(ring * cos(u), ring * sin(u), rr * sin(h.y));',
     '}',
 
     'void main(){',
     '  vec3 pos = texture2D(tPos, vUv).xyz;',
-    '  vec3 origin = texture2D(tOrigin, vUv).xyz;',
-    '  if (length(pos) > 0.7) pos /= 2.0;',
-    '  pos += curlNoise(pos * 0.1 + time * 0.05) * 1.0 * 0.0002 * HZ;',
-    '  vec3 gradient = sdfNormal(pos);',
-    '  float sdf = sdfShape(pos);',
-    '  pos += cross(normalize(pos + 1e-6), gradient) * 0.0005;',
-    '  pos += -gradient * sdf * 0.06;',
-    '  pos += (origin - pos) * 0.0002 * HZ;',
+    '  vec3 home = homePoint(texture2D(tHome, vUv).xyz);',
+    '  if (length(pos) > 0.9) pos /= 2.0;',
+    '  pos += curlNoise(pos * 0.1 + time * 0.05) * 0.0002 * HZ;',
+    /* spring home: stirred particles always return to their own place */
+    '  pos += (home - pos) * (1.0 - pow(1.0 - 0.05, HZ));',
+    /* light surface lock keeps the skin crisp */
+    '  pos -= sdfNormal(pos) * sdfShape(pos) * 0.1;',
+    /* cursor fluid, capped so one swipe can never fling points far */
     '  vec4 clip = uProj * uModel * vec4(pos, 1.0);',
     '  vec2 suv = clip.xy / clip.w * 0.5 + 0.5;',
     '  vec3 flow = uNormal * vec3(texture2D(uVel, suv).xy, 0.0);',
     '  float dens = clamp(texture2D(uDen, suv).r, 0.0, 1.0);',
-    '  pos += flow * 0.0001 * HZ * 0.4 * dens;',
+    '  vec3 push = flow * 0.0001 * HZ * 0.8 * dens;',
+    '  float pl = length(push);',
+    '  if (pl > 0.015) push *= 0.015 / pl;',
+    '  pos += push;',
     '  gl_FragColor = vec4(pos, 1.0);',
     '}'
   ].join('\n');
@@ -542,7 +539,7 @@ PHP</span></div>
     vertexShader: 'varying vec2 vUv; void main(){ vUv = position.xy * 0.5 + 0.5; gl_Position = vec4(position.xy, 0.0, 1.0); }',
     fragmentShader: SIM_FRAG,
     uniforms: {
-      tPos: { value: null }, tOrigin: { value: originTex }, uVel: { value: null }, uDen: { value: null },
+      tPos: { value: null }, tHome: { value: homeTex }, uVel: { value: null }, uDen: { value: null },
       time: { value: 0 }, HZ: { value: 1 },
       uProj: { value: new THREE.Matrix4() }, uModel: { value: new THREE.Matrix4() }, uNormal: { value: new THREE.Matrix3() }
     },
@@ -559,7 +556,9 @@ PHP</span></div>
   var group = new THREE.Group();
   var D2R = Math.PI / 180;
   group.position.set(0.343, 0.16, -1);
-  group.rotation.set(-28.4 * D2R, 390 * D2R, 4.92 * D2R);
+  var BASE_ROT = { x: -28.4 * D2R, y: 390 * D2R, z: 4.92 * D2R };
+  var tilt = { x: 0, y: 0 };
+  group.rotation.set(BASE_ROT.x, BASE_ROT.y, BASE_ROT.z);
   group.scale.set(5, 5, 6);
   scene.add(group);
 
@@ -587,7 +586,7 @@ PHP</span></div>
 
   var pointsMat = new THREE.ShaderMaterial({
     transparent: true, depthTest: true, depthWrite: false, blending: THREE.AdditiveBlending,
-    uniforms: { tPos: { value: null }, tMatcap: { value: matcap }, time: { value: 0 }, DPR: { value: DPR }, uGain: { value: 2.0 } },
+    uniforms: { tPos: { value: null }, tMatcap: { value: matcap }, time: { value: 0 }, DPR: { value: DPR }, uGain: { value: 1.5 } },
     vertexShader: [
       'uniform sampler2D tPos; uniform float DPR;',
       'attribute vec4 random; varying vec4 vRandom; varying float vScale;',
@@ -664,6 +663,10 @@ PHP</span></div>
     camera.position.lerp(target, 0.05);
     camera.lookAt(0, 0, 0);
     camera.updateMatrixWorld();
+    /* the ring leans toward the cursor */
+    tilt.x += (gy * 0.22 - tilt.x) * 0.06;
+    tilt.y += (gx * 0.32 - tilt.y) * 0.06;
+    group.rotation.set(BASE_ROT.x + tilt.x, BASE_ROT.y + tilt.y, BASE_ROT.z);
     group.updateMatrixWorld(true);
 
     /* mouse -> fluid */
