@@ -576,9 +576,9 @@ PHP</span></div>
     '  vec2 suv = clip.xy / clip.w * 0.5 + 0.5;',
     '  vec3 flow = uNormal * vec3(texture2D(uVel, suv).xy, 0.0);',
     '  float dens = clamp(texture2D(uDen, suv).r, 0.0, 1.0);',
-    '  vec3 push = flow * 0.0001 * HZ * 0.8 * dens;',
+    '  vec3 push = flow * 0.0001 * HZ * 0.5 * dens;',
     '  float pl = length(push);',
-    '  if (pl > 0.005) push *= 0.005 / pl;',
+    '  if (pl > 0.003) push *= 0.003 / pl;',
     '  pos += push;',
     '  gl_FragColor = vec4(pos, 1.0);',
     '}'
@@ -738,20 +738,20 @@ PHP</span></div>
 
     /* mouse -> fluid */
     /* the cursor is eased first, so quick flicks become one soft glide */
-    var ease = 1 - Math.pow(1 - 0.08, HZ);
+    var ease = 1 - Math.pow(1 - 0.05, HZ);
     smooth.x += (mouse.x - smooth.x) * ease;
     smooth.y += (mouse.y - smooth.y) * ease;
     var dx = smooth.x - prev.x, dy = smooth.y - prev.y;
     var len = Math.sqrt(dx * dx + dy * dy);
     if (len > 0.05) {
       /* same gentle strength whether you drift or sweep: speed is capped */
-      var sp = Math.min(len, 10);
+      var sp = Math.min(len, 6);
       var k = sp / len;
-      var radius = clampMap(sp, 0, 6, 0.035, 0.07) * (mobile ? 0.8 : 1);
+      var radius = clampMap(sp, 0, 6, 0.016, 0.03) * (mobile ? 0.8 : 1);
       var p1 = [smooth.x / w, 1 - smooth.y / h];
       var p0 = [prev.x / w, 1 - prev.y / h];
       var aspect = w / h;
-      splat(vel, p0, p1, [dx * k * 5, -dy * k * 5, 1], radius, aspect);
+      splat(vel, p0, p1, [dx * k * 3, -dy * k * 3, 1], radius, aspect);
       splat(den, p0, p1, [0.5, 0.5, 0.5], radius, aspect);
     }
     prev.x = smooth.x; prev.y = smooth.y;
