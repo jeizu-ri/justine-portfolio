@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Justine Lawrence Rivera — Web developer</title>
+<title>Justine Lawrence Rivera â€” Web developer</title>
 <meta name="description" content="Justine Lawrence Rivera is an IT student in the Philippines who builds web apps and follows ideas through to deployment. Shipped projects: PWAs, finance tools, games and team builds. Open to internships.">
 <meta name="theme-color" content="#000000">
 <link rel="icon" href="data:,">
@@ -64,7 +64,25 @@ a:focus-visible, button:focus-visible { outline: 1px solid var(--accent); outlin
 .card[hidden] { display: none; }
 .thumb { position: relative; height: 160px; border-radius: 2px; background: #0a0a0a; overflow: hidden; }
 .thumb img, .thumb video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 600ms cubic-bezier(.16, 1, .3, 1); }
-.card:hover .thumb img, .card:hover .thumb video { transform: scale(1.04); }
+.card:hover .thumb img { transform: scale(1.04); }
+.thumb video { opacity: 0; transition: opacity 320ms; }
+.card.playing .thumb video { opacity: 1; }
+/* hover caption: says what the clip is showing */
+.thumb::after {
+  content: attr(data-what); position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 12px 9px;
+  font-size: 10.5px; letter-spacing: .06em; color: #fff;
+  background: linear-gradient(to top, rgba(0, 0, 0, .78), rgba(0, 0, 0, 0));
+  opacity: 0; transform: translateY(6px); transition: opacity 280ms, transform 280ms; pointer-events: none;
+}
+.thumb::before {
+  content: ""; position: absolute; top: 10px; right: 10px; z-index: 1; width: 7px; height: 7px; border-radius: 50%;
+  background: #ff4d3d; opacity: 0; transition: opacity 280ms; pointer-events: none;
+}
+.card.playing .thumb::after, .card:hover .thumb::after, .card:focus-visible .thumb::after { opacity: 1; transform: none; }
+.card.playing .thumb::before { opacity: 1; animation: blink 1.4s steps(2, jump-none) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.list:has(.card:hover) .card:not(:hover) { opacity: .5; }
+.card { transition: opacity 280ms; }
 .thumb .none {
   position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 12px;
   font-size: 11px; color: #a0a0a0;
@@ -110,8 +128,9 @@ a:focus-visible, button:focus-visible { outline: 1px solid var(--accent); outlin
   .m-projects { display: block; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .thumb img, .thumb video { transition: none; }
-  .card:hover .thumb img, .card:hover .thumb video { transform: none; }
+  .thumb img, .thumb video, .thumb::after, .card { transition: none; }
+  .card:hover .thumb img { transform: none; }
+  .card.playing .thumb::before { animation: none; }
 }
 </style>
 </head>
@@ -138,38 +157,38 @@ a:focus-visible, button:focus-visible { outline: 1px solid var(--accent); outlin
   </div>
 
   <div class="list" id="list">
-    <a class="card" href="https://handa-ph-iota.vercel.app" target="_blank" rel="noopener" data-tags="web pwa weather typescript">
-      <div class="thumb"><img src="assets/handa-ph.png" alt="Handa PH home screen with a location search card" loading="lazy" width="1280" height="640"></div>
+    <a class="card" href="https://handa-ph-iota.vercel.app" target="_blank" rel="noopener" data-tags="web pwa weather typescript" data-demo="assets/demos/handa.mp4">
+      <div class="thumb" data-what="SEARCH A PLACE, GET ITS STORM SIGNAL"><img src="assets/handa-ph.png" alt="Handa PH home screen with a location search card" loading="lazy" width="1280" height="640"></div>
       <div class="meta"><span>Handa PH
 Typhoon alerts</span><span>PWA
 TypeScript</span></div>
     </a>
-    <a class="card" href="https://budgettracker-snowy.vercel.app" target="_blank" rel="noopener" data-tags="web pwa finance typescript">
-      <div class="thumb"><img src="assets/budgettracker-home.png" alt="BudgetTracker home screen showing the spendable amount and the week" loading="lazy" width="795" height="1024" style="object-position: 50% 6%"></div>
+    <a class="card" href="https://budgettracker-snowy.vercel.app" target="_blank" rel="noopener" data-tags="web pwa finance typescript" data-demo="assets/demos/budget.mp4">
+      <div class="thumb" data-what="SEE WHAT YOU CAN SPEND TODAY"><img src="assets/budgettracker-home.png" alt="BudgetTracker home screen showing the spendable amount and the week" loading="lazy" width="795" height="1024" style="object-position: 50% 6%"></div>
       <div class="meta"><span>BudgetTracker
 Personal budget</span><span>Web app
 TypeScript</span></div>
     </a>
-    <a class="card" href="https://daily-intentionality-scheduler-six.vercel.app" target="_blank" rel="noopener" data-tags="web pwa planner javascript">
-      <div class="thumb"><img src="assets/scheduler.png" alt="Daily Intentionality Scheduler inventory of time blocks" loading="lazy" width="1280" height="640"></div>
+    <a class="card" href="https://daily-intentionality-scheduler-six.vercel.app" target="_blank" rel="noopener" data-tags="web pwa planner javascript" data-demo="assets/demos/sched.mp4">
+      <div class="thumb" data-what="STACK TIME BLOCKS INTO YOUR DAY"><img src="assets/scheduler.png" alt="Daily Intentionality Scheduler inventory of time blocks" loading="lazy" width="1280" height="640"></div>
       <div class="meta"><span>Daily Scheduler
 Intention blocks</span><span>iPad PWA
 JavaScript</span></div>
     </a>
-    <a class="card" href="https://tetro-flow.vercel.app" target="_blank" rel="noopener" data-tags="web game javascript">
-      <div class="thumb"><img src="assets/testris.png" alt="Testris title screen with three difficulty cards" loading="lazy" width="1280" height="640"></div>
+    <a class="card" href="https://tetro-flow.vercel.app" target="_blank" rel="noopener" data-tags="web game javascript" data-demo="assets/demos/testris.mp4">
+      <div class="thumb" data-what="BATTLE A BOT, FIRST TO 3 KOS"><img src="assets/testris.png" alt="Testris title screen with three difficulty cards" loading="lazy" width="1280" height="640"></div>
       <div class="meta"><span>Testris
 Battle 2P vs bot</span><span>Browser game
 JavaScript</span></div>
     </a>
-    <a class="card" href="https://brightsmile.pro" target="_blank" rel="noopener" data-tags="web team typescript">
-      <div class="thumb"><img src="assets/brightsmile.png" alt="Bright Smile dental clinic homepage" loading="lazy" width="1280" height="640"></div>
+    <a class="card" href="https://brightsmile.pro" target="_blank" rel="noopener" data-tags="web team typescript" data-demo="assets/demos/bright.mp4">
+      <div class="thumb" data-what="BOOK A VISIT AT THE NEAREST CLINIC"><img src="assets/brightsmile.png" alt="Bright Smile dental clinic homepage" loading="lazy" width="1280" height="640"></div>
       <div class="meta"><span>BrightSmile
 Dental clinic site</span><span>Team build
 TypeScript</span></div>
     </a>
-    <a class="card" href="https://github.com/Kekmw/OrgManager" target="_blank" rel="noopener" data-tags="web team">
-      <div class="thumb"><div class="none">Code only</div></div>
+    <a class="card" href="https://github.com/Kekmw/OrgManager" target="_blank" rel="noopener" data-tags="web team" data-demo="assets/demos/org.mp4">
+      <div class="thumb" data-what="MEMBERS, EVENTS AND FINANCE API"><div class="none">Code only</div></div>
       <div class="meta"><span>OrgManager
 Organization tool</span><span>Team build
 PHP</span></div>
@@ -225,13 +244,46 @@ PHP</span></div>
   });
 
   var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  document.querySelectorAll('video').forEach(function (v) {
-    if (still) { v.removeAttribute('autoplay'); v.pause(); return; }
-    v.muted = true;
-    var go = function () { var p = v.play(); if (p && p.catch) p.catch(function () {}); };
-    v.addEventListener('loadeddata', go);
-    document.addEventListener('visibilitychange', function () { if (!document.hidden) go(); });
-    go();
+  /* Demo loops: a muted clip per project, loaded lazily and played while the card is hovered or focused */
+  var canHover = window.matchMedia('(hover: hover)').matches;
+  function getVideo(card) {
+    var v = card.querySelector('video');
+    if (v || !card.dataset.demo) return v;
+    v = document.createElement('video');
+    v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'auto';
+    v.setAttribute('aria-hidden', 'true'); v.tabIndex = -1;
+    v.src = card.dataset.demo;
+    card.querySelector('.thumb').appendChild(v);
+    return v;
+  }
+  function play(card) {
+    if (still) return;
+    var v = getVideo(card);
+    if (!v) return;
+    card.classList.add('playing');
+    var p = v.play(); if (p && p.catch) p.catch(function () {});
+  }
+  function stop(card) {
+    card.classList.remove('playing');
+    var v = card.querySelector('video');
+    if (v) { setTimeout(function () { if (!card.classList.contains('playing')) { v.pause(); v.currentTime = 0; } }, 320); }
+  }
+  cards.forEach(function (card) {
+    card.addEventListener('mouseenter', function () { play(card); });
+    card.addEventListener('mouseleave', function () { stop(card); });
+    card.addEventListener('focus', function () { play(card); });
+    card.addEventListener('blur', function () { stop(card); });
+  });
+  if (!canHover && 'IntersectionObserver' in window) {
+    /* touch tablets have no hover: play whichever card sits in view */
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { e.isIntersecting ? play(e.target) : stop(e.target); });
+    }, { root: list, threshold: 0.7 });
+    cards.forEach(function (c) { io.observe(c); });
+  }
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) cards.forEach(function (c) { var v = c.querySelector('video'); if (v) v.pause(); });
+    else cards.forEach(function (c) { if (c.classList.contains('playing')) play(c); });
   });
 })();
 </script>
@@ -444,22 +496,45 @@ PHP</span></div>
   originTex.minFilter = originTex.magFilter = THREE.NearestFilter;
   originTex.needsUpdate = true;
 
-  /* every particle owns a home point on the torus: (u, v, shell). Density is
-     uniform over the surface via accept/reject on the tube angle. */
-  var T_MAJOR = 0.21, T_MINOR = 0.08;
+  /* every particle owns a home point on the portrait. Until the photo map has
+     loaded they rest in a loose cloud, then flow into the face. */
+  var P_W = 0.58, P_DEPTH = 0.13;
   var homeData = new Float32Array(COUNT * 4);
   for (var h = 0; h < COUNT; h++) {
-    var tv;
-    do { tv = Math.random() * Math.PI * 2; }
-    while (Math.random() * (T_MAJOR + T_MINOR) > T_MAJOR + T_MINOR * Math.cos(tv));
-    homeData[h * 4] = Math.random() * Math.PI * 2;
-    homeData[h * 4 + 1] = tv;
-    homeData[h * 4 + 2] = Math.random();
+    var hx, hy, hz;
+    do { hx = Math.random() * 2 - 1; hy = Math.random() * 2 - 1; hz = Math.random() * 2 - 1; } while (hx * hx + hy * hy + hz * hz > 1);
+    homeData[h * 4] = hx * 0.2; homeData[h * 4 + 1] = hy * 0.2; homeData[h * 4 + 2] = hz * 0.2;
     homeData[h * 4 + 3] = 1;
   }
   var homeTex = new THREE.DataTexture(homeData, SIZE, SIZE, THREE.RGBAFormat, THREE.FloatType);
   homeTex.minFilter = homeTex.magFilter = THREE.NearestFilter;
   homeTex.needsUpdate = true;
+
+  /* photo map: R = particle density (light skin dense, dark hair sparse), G = depth dome */
+  (function loadPortrait() {
+    var img = new Image();
+    img.onload = function () {
+      var n = img.width, cv = document.createElement('canvas');
+      cv.width = cv.height = n;
+      var cx = cv.getContext('2d', { willReadFrequently: true });
+      cx.drawImage(img, 0, 0);
+      var px = cx.getImageData(0, 0, n, n).data;
+      var cdf = new Float32Array(n * n), sum = 0, i;
+      for (i = 0; i < n * n; i++) { sum += px[i * 4]; cdf[i] = sum; }
+      for (i = 0; i < n * n; i++) cdf[i] /= sum;
+      for (var k = 0; k < COUNT; k++) {
+        var r = Math.random(), lo = 0, hi = n * n - 1;
+        while (lo < hi) { var mid = (lo + hi) >> 1; if (cdf[mid] < r) lo = mid + 1; else hi = mid; }
+        var gx = (lo % n) + Math.random(), gy = Math.floor(lo / n) + Math.random();
+        var depth = px[lo * 4 + 1] / 255;
+        homeData[k * 4] = (gx / n - 0.5) * P_W;
+        homeData[k * 4 + 1] = -(gy / n - 0.5) * P_W;
+        homeData[k * 4 + 2] = (depth - 0.5) * P_DEPTH + (Math.random() - 0.5) * 0.004;
+      }
+      homeTex.needsUpdate = true;
+    };
+    img.src = 'assets/me-map.png';
+  })();
 
   function posRT() {
     return new THREE.WebGLRenderTarget(SIZE, SIZE, { type: THREE.FloatType, format: THREE.RGBAFormat, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, depthBuffer: false, stencilBuffer: false });
@@ -486,34 +561,13 @@ PHP</span></div>
     '  return normalize(c + 1e-6);',
     '}',
 
-    /* the form: a plain, exact torus. The hole axis is local z. */
-    'const float T_R = 0.21; const float T_r = 0.08;',
-    'float sdfShape(vec3 p){',
-    '  vec2 q = vec2(length(p.xy) - T_R, p.z);',
-    '  return length(q) - T_r;',
-    '}',
-    'vec3 sdfNormal(vec3 p){',
-    '  float l = max(length(p.xy), 1e-5);',
-    '  vec2 q = vec2(l - T_R, p.z);',
-    '  return normalize(vec3(p.xy / l * q.x, q.y) + 1e-7);',
-    '}',
-    /* where particle i belongs on the torus; the ring slowly circulates */
-    'vec3 homePoint(vec3 h){',
-    '  float u = h.x + time * 0.08;',
-    '  float rr = T_r * (1.0 - 0.1 * h.z * h.z);',
-    '  float ring = T_R + rr * cos(h.y);',
-    '  return vec3(ring * cos(u), ring * sin(u), rr * sin(h.y));',
-    '}',
-
     'void main(){',
     '  vec3 pos = texture2D(tPos, vUv).xyz;',
-    '  vec3 home = homePoint(texture2D(tHome, vUv).xyz);',
+    '  vec3 home = texture2D(tHome, vUv).xyz;',
     '  if (length(pos) > 0.9) pos /= 2.0;',
     '  pos += curlNoise(pos * 0.1 + time * 0.05) * 0.0002 * HZ;',
     /* spring home: stirred particles always return to their own place */
     '  pos += (home - pos) * (1.0 - pow(1.0 - 0.05, HZ));',
-    /* light surface lock keeps the skin crisp */
-    '  pos -= sdfNormal(pos) * sdfShape(pos) * 0.1;',
     /* cursor fluid, capped so one swipe can never fling points far */
     '  vec4 clip = uProj * uModel * vec4(pos, 1.0);',
     '  vec2 suv = clip.xy / clip.w * 0.5 + 0.5;',
@@ -553,19 +607,19 @@ PHP</span></div>
   function layout() {
     var w = window.innerWidth, ar = w / window.innerHeight;
     var s, x, y;
-    if (w <= 760) { s = 3.1; x = 0.0; y = 0.85; }
-    else if (w <= 1100) { s = 7.0; x = 0.2 * ar; y = 0.0; }
+    if (w <= 760) { s = 3.0; x = 0.0; y = 0.85; }
+    else if (w <= 1100) { s = 6.2; x = 0.2 * ar; y = 0.0; }
     else {
       // ring is taller than the screen and sits slightly right of center,
       // so its band crosses both the card column and the text column
-      s = 9.4 * Math.min(1, ar / 1.7);
-      x = 0.2 * ar; y = 0.0;
+      s = 8.0 * Math.min(1, ar / 1.7);
+      x = 0.38 * ar; y = -0.32;
     }
     if (ar < 1.2 && w > 760) { s *= 0.85; }
     group.position.set(x, y, -1);
     group.scale.set(s, s, s * 1.2);
   }
-  var BASE_ROT = { x: -28.4 * D2R, y: 390 * D2R, z: 4.92 * D2R };
+  var BASE_ROT = { x: 0, y: 0, z: 0 };
   var tilt = { x: 0, y: 0 };
   group.rotation.set(BASE_ROT.x, BASE_ROT.y, BASE_ROT.z);
   layout();
@@ -674,9 +728,9 @@ PHP</span></div>
     camera.lookAt(0, 0, 0);
     camera.updateMatrixWorld();
     /* the ring leans toward the cursor */
-    tilt.x += (gy * 0.22 - tilt.x) * 0.06;
-    tilt.y += (gx * 0.32 - tilt.y) * 0.06;
-    group.rotation.set(BASE_ROT.x + tilt.x, BASE_ROT.y + tilt.y, BASE_ROT.z);
+    tilt.x += (gy * 0.14 - tilt.x) * 0.06;
+    tilt.y += (gx * 0.26 - tilt.y) * 0.06;
+    group.rotation.set(BASE_ROT.x + tilt.x, BASE_ROT.y + tilt.y + Math.sin(t * 0.35) * 0.1, BASE_ROT.z);
     group.updateMatrixWorld(true);
 
     /* mouse -> fluid */
