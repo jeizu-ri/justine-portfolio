@@ -257,7 +257,6 @@ PHP</span></div>
     return v;
   }
   function play(card) {
-    if (still) return;
     var v = getVideo(card);
     if (!v) return;
     card.classList.add('playing');
@@ -274,7 +273,7 @@ PHP</span></div>
     card.addEventListener('focus', function () { play(card); });
     card.addEventListener('blur', function () { stop(card); });
   });
-  if (!canHover && 'IntersectionObserver' in window) {
+  if (!canHover && !still && 'IntersectionObserver' in window) {
     /* touch tablets have no hover: play whichever card sits in view */
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) { e.isIntersecting ? play(e.target) : stop(e.target); });
@@ -498,13 +497,13 @@ PHP</span></div>
 
   /* every particle owns a home point on the portrait. Until the photo map has
      loaded they rest in a loose cloud, then flow into the face. */
-  var P_W = 0.58, P_DEPTH = 0.13;
+  var P_W = 0.58, P_DEPTH = 0.2;
   var homeData = new Float32Array(COUNT * 4);
   for (var h = 0; h < COUNT; h++) {
     var hx, hy, hz;
     do { hx = Math.random() * 2 - 1; hy = Math.random() * 2 - 1; hz = Math.random() * 2 - 1; } while (hx * hx + hy * hy + hz * hz > 1);
     homeData[h * 4] = hx * 0.2; homeData[h * 4 + 1] = hy * 0.2; homeData[h * 4 + 2] = hz * 0.2;
-    homeData[h * 4 + 3] = 1;
+    homeData[h * 4 + 3] = 0.6;
   }
   var homeTex = new THREE.DataTexture(homeData, SIZE, SIZE, THREE.RGBAFormat, THREE.FloatType);
   homeTex.minFilter = homeTex.magFilter = THREE.NearestFilter;
@@ -526,10 +525,14 @@ PHP</span></div>
         var r = Math.random(), lo = 0, hi = n * n - 1;
         while (lo < hi) { var mid = (lo + hi) >> 1; if (cdf[mid] < r) lo = mid + 1; else hi = mid; }
         var gx = (lo % n) + Math.random(), gy = Math.floor(lo / n) + Math.random();
-        var depth = px[lo * 4 + 1] / 255;
+        var depth = px[lo * 4 + 1] / 255, shade = px[lo * 4 + 2] / 255;
+        var zf = (depth - 0.5) * P_DEPTH + (Math.random() - 0.5) * 0.003;
+        var back = Math.random() < 0.14;
         homeData[k * 4] = (gx / n - 0.5) * P_W;
         homeData[k * 4 + 1] = -(gy / n - 0.5) * P_W;
-        homeData[k * 4 + 2] = (depth - 0.5) * P_DEPTH + (Math.random() - 0.5) * 0.004;
+        /* a thin shell behind the face gives the head volume when it turns */
+        homeData[k * 4 + 2] = back ? zf - (0.05 + 0.09 * depth) : zf;
+        homeData[k * 4 + 3] = back ? shade * 0.35 : shade;
       }
       homeTex.needsUpdate = true;
     };
@@ -649,24 +652,24 @@ PHP</span></div>
 
   var pointsMat = new THREE.ShaderMaterial({
     transparent: true, depthTest: true, depthWrite: false, blending: THREE.AdditiveBlending,
-    uniforms: { tPos: { value: null }, tMatcap: { value: matcap }, time: { value: 0 }, DPR: { value: DPR }, uGain: { value: 2.0 } },
+    uniforms: { tPos: { value: null }, tHome: { value: homeTex }, tMatcap: { value: matcap }, time: { value: 0 }, DPR: { value: DPR }, uGain: { value: 2.0 } },
     vertexShader: [
-      'uniform sampler2D tPos; uniform float DPR;',
-      'attribute vec4 random; varying vec4 vRandom; varying float vScale;',
+      'uniform sampler2D tPos; uniform sampler2D tHome; uniform float DPR;',
+      'attribute vec4 random; varying vec4 vRandom; varying float vScale; varying float vShade;',
       'void main(){',
       '  vec3 pos = texture2D(tPos, position.xy).xyz;',
       '  pos *= mix(1.0, 1.5, pow(random.y, 150.0));',
       '  vec4 mv = modelViewMatrix * vec4(pos, 1.0);',
       '  float d = length(mv.xyz);',
       '  float scale = smoothstep(3.0, 15.0, d) * mix(0.5, 1.0, random.z);',
-      '  vScale = scale; vRandom = random;',
+      '  vScale = scale; vRandom = random; vShade = texture2D(tHome, position.xy).w;',
       '  gl_Position = projectionMatrix * mv;',
-      '  gl_PointSize = 0.05 * DPR * 2.0 * scale * (1000.0 / d);',
+      '  gl_PointSize = 0.047 * DPR * 2.0 * scale * (1000.0 / d);',
       '}'
     ].join('\n'),
     fragmentShader: [
       'uniform sampler2D tMatcap; uniform float time; uniform float uGain;',
-      'varying vec4 vRandom; varying float vScale;',
+      'varying vec4 vRandom; varying float vScale; varying float vShade;',
       'vec3 softLight(vec3 a, vec3 b){ return (1.0 - 2.0 * b) * a * a + 2.0 * b * a; }',
       'vec3 overlay(vec3 a, vec3 b){ return mix(2.0 * a * b, 1.0 - 2.0 * (1.0 - a) * (1.0 - b), step(0.5, a)); }',
       'void main(){',
@@ -676,7 +679,7 @@ PHP</span></div>
       '  vec3 col = vec3(mix(0.0, 0.2, vRandom.x));',
       '  col = mix(col, vec3(0.6, 0.45, 1.0), pow(vRandom.z, 100.0));',
       '  float sparkle = 0.5 + (0.4 + sin(time * 4.0 + vRandom.y * 20.0)) * pow(vRandom.z, 10.0) * 2.5;',
-      '  col *= sparkle * uGain;',
+      '  col *= sparkle * uGain * mix(0.9, 2.5, vShade);',
       '  float a = sin(time + vRandom.z * 20.0) * 0.5 + 1.0;',
       '  mat2 r = mat2(cos(a), -sin(a), sin(a), cos(a));',
       '  vec3 m = texture2D(tMatcap, r * c + 0.5).rgb;',
@@ -728,9 +731,9 @@ PHP</span></div>
     camera.lookAt(0, 0, 0);
     camera.updateMatrixWorld();
     /* the ring leans toward the cursor */
-    tilt.x += (gy * 0.14 - tilt.x) * 0.06;
-    tilt.y += (gx * 0.26 - tilt.y) * 0.06;
-    group.rotation.set(BASE_ROT.x + tilt.x, BASE_ROT.y + tilt.y + Math.sin(t * 0.35) * 0.1, BASE_ROT.z);
+    tilt.x += (gy * 0.2 - tilt.x) * 0.06;
+    tilt.y += (gx * 0.5 - tilt.y) * 0.06;
+    group.rotation.set(BASE_ROT.x + tilt.x, BASE_ROT.y + tilt.y + Math.sin(t * 0.35) * 0.3, BASE_ROT.z);
     group.updateMatrixWorld(true);
 
     /* mouse -> fluid */
