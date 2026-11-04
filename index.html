@@ -737,8 +737,8 @@ PHP</span></div>
     group.updateMatrixWorld(true);
 
     /* mouse -> fluid */
-    /* the cursor is eased first, so quick flicks become one soft glide */
-    var ease = 1 - Math.pow(1 - 0.05, HZ);
+    /* no easing: the stir lands exactly under the cursor, strength is capped instead */
+    var ease = 1;
     smooth.x += (mouse.x - smooth.x) * ease;
     smooth.y += (mouse.y - smooth.y) * ease;
     var dx = smooth.x - prev.x, dy = smooth.y - prev.y;
